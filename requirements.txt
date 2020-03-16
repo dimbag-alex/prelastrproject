@@ -4,6 +4,6 @@ wtforms
 flask_login
 requests
 flask_restful
-sqalchemy
-sqalchemy_serializer
+sqlalchemy
+sqlalchemy_serializer
 gunicorn 
