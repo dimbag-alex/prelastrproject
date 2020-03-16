@@ -3,7 +3,7 @@ flask_wtf
 wtforms
 flask_login
 requests
-flask_restfull
+flask_restful
 sqalchemy
 sqalchemy_serializer
 gunicorn 
