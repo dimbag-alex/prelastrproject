@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from flask_restful import reqparse, abort, Api, Resource
+from flask_restful import Api
 
 from data import db_session
 from data.users import User
@@ -20,11 +21,9 @@ class UsersResource(Resource):
         abort_if_news_not_found(news_id)
         session = db_session.create_session()
         news = session.query(User).get(news_id)
-        return jsonify({'users': news.to_dict(
-            only=(
-                'id', 'name', 'email', 'surname', 'position', 'speciality', 'address', 'hashed_password',
-                'modified_date',
-                'age'))})
+        return jsonify({'news': news.to_dict(
+            only=('id', 'name', 'email', 'surname', 'position',
+                  'speciality', 'address', 'hashed_password', 'modified_date', 'age'))})
 
     def delete(self, news_id):
         abort_if_news_not_found(news_id)
@@ -40,7 +39,7 @@ parser.add_argument('id', required=True, type=int)
 parser.add_argument('name', required=True)
 parser.add_argument('email', required=True)
 parser.add_argument('surname', required=True)
-parser.add_argument('position', required=True)
+parser.add_argument('position', required=True, type=int)
 parser.add_argument('speciality', required=True)
 parser.add_argument('address', required=True)
 parser.add_argument('hashed_password', required=True)
@@ -49,12 +48,12 @@ parser.add_argument('age', required=True, type=int)
 
 
 class UsersListResource(Resource):
-
     def get(self):
         session = db_session.create_session()
         news = session.query(User).all()
         return jsonify({'news': [item.to_dict(
-            only=('title', 'content', 'user.name')) for item in news]})
+            only=('id', 'name', 'email', 'surname', 'position',
+                  'speciality', 'address', 'hashed_password', 'modified_date', 'age')) for item in news]})
 
     def post(self):
         args = parser.parse_args()
@@ -63,15 +62,13 @@ class UsersListResource(Resource):
             id=args['id'],
             name=args['name'],
             email=args['email'],
-            surname=args['is_published'],
+            surname=args['surname'],
             position=args['position'],
             speciality=args['speciality'],
             address=args['address'],
             hashed_password=args['hashed_password'],
             modified_date=args['modified_date'],
-            age=args['age']
-
-        )
+            age=args['age'])
         session.add(news)
         session.commit()
         return jsonify({'success': 'OK'})
