@@ -1,0 +1,9 @@
+flask
+flask_wtf
+wtforms
+flask_login
+requests
+flask_restfull
+sqalchemy
+sqalchemy_serializer
+gunicorn 
